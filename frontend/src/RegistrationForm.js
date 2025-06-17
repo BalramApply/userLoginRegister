@@ -1,31 +1,31 @@
-// RegistrationForm.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const RegistrationForm = () => {
     const [formData, setFormData] = useState({ username: '', email: '', password: '' });
-    const navigation = useNavigate()
-
-
-    const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
     const [error, setError] = useState('');
+    const navigate = useNavigate();
+
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+        setError(''); // Clear error on typing
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await axios.post('http://localhost:5000/api/auth/register', formData);
             alert('User registered successfully');
-            navigation('/login')
-
+            navigate('/login');
         } catch (error) {
             console.error(error);
-            setError(error)
+            const message = error.response?.data?.error || error.response?.data?.message || error.message;
+            setError(message);
         }
     };
 
     return (
-
         <div className="container mt-5">
             <div className="row justify-content-center">
                 <div className="col-md-6">
@@ -41,7 +41,9 @@ const RegistrationForm = () => {
                                     <input
                                         type="text"
                                         className="form-control"
-                                        name="username" value={formData.username} onChange={handleChange}
+                                        name="username"
+                                        value={formData.username}
+                                        onChange={handleChange}
                                         required
                                     />
                                 </div>
@@ -50,7 +52,9 @@ const RegistrationForm = () => {
                                     <input
                                         type="email"
                                         className="form-control"
-                                        name="email" value={formData.email} onChange={handleChange}
+                                        name="email"
+                                        value={formData.email}
+                                        onChange={handleChange}
                                         required
                                     />
                                 </div>
@@ -59,7 +63,9 @@ const RegistrationForm = () => {
                                     <input
                                         type="password"
                                         className="form-control"
-                                        name="password" value={formData.password} onChange={handleChange}
+                                        name="password"
+                                        value={formData.password}
+                                        onChange={handleChange}
                                         required
                                     />
                                 </div>
